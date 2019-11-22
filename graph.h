@@ -41,8 +41,10 @@ void graphInit(tGraph *graph);
 
 void nodeInsert(tGraph *graph, tKey key, unsigned int position);
 
+void makeConnection(tGraph *graph, unsigned int position, tKey neighbour_key, tWeight weight);
+
 void graphPrint(tGraph *graph);
 
-void makeConnection(tGraph *graph, unsigned int position, tKey neighbour_key, tWeight weight);
+void graphClear(tGraph *graph);
 
 #endif

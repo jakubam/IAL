@@ -42,6 +42,21 @@ void makeConnection(tGraph *graph, unsigned int position, tKey neighbour_key, tW
     }
 }
 
+void graphClear(tGraph *graph) {
+    tConnection *temp;
+    tConnection *to_delete;
+    for (int i = 0; i < NUM_OF_NODES; i++) {
+        temp = graph->nodes[i]->connection;
+        while (temp) {
+            to_delete = temp;
+            temp = temp->connection;
+            free(to_delete);
+        }
+        free(graph->nodes[i]);
+        graph->nodes[i] = NULL;
+    }
+}
+
 void graphPrint(tGraph *graph) {
     for (int i = 0; i < NUM_OF_NODES; i++) {
         printf("Uzel: %s ", graph->nodes[i]->key);
@@ -53,5 +68,4 @@ void graphPrint(tGraph *graph) {
         }
         printf("\n");
     }
-
 }

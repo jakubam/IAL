@@ -28,4 +28,6 @@ int main() {
     makeConnection(graph, 4, "C", -9);
 
     graphPrint(graph);
+    graphClear(graph);
+    free(graph);
 }
