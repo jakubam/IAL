@@ -17,20 +17,16 @@
 #ifndef _GRAPH_H_
 #define _GRAPH_H_
 
-#define NUM_OF_NODES 5
+#define NUM_OF_NODES 3
 
-typedef char *tKey;
+typedef char *tName;
 typedef int tWeight;
 
-typedef struct tConnection {
-    tKey key;
-    tWeight weight;
-    struct tConnection* connection;
-} tConnection;
-
 typedef struct tNode {
-    tKey key;
-    struct tConnection* connection;
+    tName name;
+    tWeight weight;
+    unsigned int position;
+    struct tNode* next;
 } tNode;
 
 typedef struct tGraph{
@@ -39,12 +35,15 @@ typedef struct tGraph{
 
 void graphInit(tGraph *graph);
 
-void nodeInsert(tGraph *graph, tKey key, unsigned int position);
+void nodeInsert(tGraph *graph, tName name, unsigned int position);
 
-void makeConnection(tGraph *graph, unsigned int position, tKey neighbour_key, tWeight weight);
+void makeConnection(tGraph *graph, unsigned int position, tName neighbour_name, unsigned int neighbour_position, tWeight weight);
 
 void graphPrint(tGraph *graph);
 
 void graphClear(tGraph *graph);
 
+void shortestPath(tGraph *graph, unsigned int start_position, unsigned int end_position);
+
+tNode* findNode(tGraph *graph, tName key);
 #endif

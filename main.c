@@ -14,19 +14,21 @@ int main() {
     nodeInsert(graph, "A", 0);
     nodeInsert(graph, "B", 1);
     nodeInsert(graph, "C", 2);
-    nodeInsert(graph, "D", 3);
-    nodeInsert(graph, "E", 4);
+    //nodeInsert(graph, "D", 3);
+    //nodeInsert(graph, "E", 4);
     /* Vytvoření spojení*/
-    makeConnection(graph, 0, "B", 1);
-    makeConnection(graph, 0, "D", -3);
-    makeConnection(graph, 0, "E", -9);
-    makeConnection(graph, 1, "A", -1);
-    makeConnection(graph, 1, "D", -5);
-    makeConnection(graph, 2, "E", 9);
-    makeConnection(graph, 3, "A", 3);
-    makeConnection(graph, 3, "B", 5);
-    makeConnection(graph, 4, "C", -9);
+    makeConnection(graph, 0, "B", 1,1);
+    makeConnection(graph, 0, "C", 2,3);
+  /*  makeConnection(graph, 0, "D",3,5);
+    makeConnection(graph, 0, "E", 4,-9);
+    makeConnection(graph, 1, "A", 0,-1);
+    makeConnection(graph, 1, "D", 3,-5);
+    makeConnection(graph, 2, "E", 4,9);
+    makeConnection(graph, 3, "A", 0,3);
+    makeConnection(graph, 3, "B", 1,5);
+    makeConnection(graph, 4, "C", 2,-9);*/
 
+    shortestPath(graph, 0, 2);
     graphPrint(graph);
     graphClear(graph);
     free(graph);
