@@ -1,8 +1,9 @@
 
 /* Graf je implementován vázaným seznamem.
  * Typ tGraph představuje pole, na jehož jednotlivé indexy jsou ukládány uzly tNode.
- * Typ tNode obsahuje ukazatel tConnection*, jenž představuje záznam o vazbě s dalším uzlem (vzniká vázaný seznam).
- * Typ tConnection obsahuje také údaj o váze cesty mezi dvěma uzly.
+ * Typ tNode reprezentuje samotný uzel, obsahuje jeho jméno, váhu spojení (vůči předchozímu uzlu), pozici v rámci grafu,
+ * díky které je umožněn přístup k uzlu.
+ *
  *
  * VÁHA:
  *
@@ -17,7 +18,7 @@
 #ifndef _GRAPH_H_
 #define _GRAPH_H_
 
-#define NUM_OF_NODES 3
+#define NUM_OF_NODES 3  /*Počet uzlů určený čtením ze souboru. */
 
 typedef char *tName;
 typedef int tWeight;

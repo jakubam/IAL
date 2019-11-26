@@ -83,23 +83,22 @@ void shortestPath(tGraph *graph, unsigned int start_position, unsigned int end_p
         previous_node[i] = 0;
     }
     distance[start_position] = 0;
+    int min_distance = INT_MAX;
+    unsigned int closest;
     tNode *temp = graph->nodes[start_position]->next;
-
+    for (int i = 0; i < NUM_OF_NODES - 1; i++) {
+        while (temp) {
+            distance[temp->position] = temp->weight;
+            if (temp->weight < min_distance) {
+                min_distance = temp->weight;
+                closest = temp->position;
+            }
+            temp = temp->next;
+        }
+    }
     /* TODO: IMPLEMENT LOGIC */
 
     for (int i = 0; i < NUM_OF_NODES; i++) {
         printf("Distance: %d\n", distance[i]);
     }
 }
-
-/*
-tNode* findNode(tGraph *graph,tName name){
-    tNode *node = NULL;
-    for(int i = 0; i < NUM_OF_NODES; i++){
-        if(graph->nodes[i]->name == name){
-            node = graph->nodes[i];
-            break;
-        }
-    }
-    return node;
-}*/
