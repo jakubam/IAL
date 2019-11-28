@@ -28,6 +28,7 @@ typedef struct tNode {
     unsigned int distance;
     unsigned int num_of_connections;
     struct tConnection **connections;
+    struct tNode* previous;
     bool done;
 } tNode;
 
@@ -38,4 +39,8 @@ typedef struct tConnection {
 
 
 void graphPrint(tNode* graph, unsigned int num_of_nodes);
+
+ void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end);
+ tNode findClosest(tNode *graph, unsigned int num_of_nodes);
+ bool pathIsFinished(tNode *graph, unsigned int num_of_nodes);
 #endif
