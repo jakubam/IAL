@@ -28,7 +28,9 @@ int main() {
     if(!file)
         return -1;
     num_of_nodes = countNodes(file);
+
     printf("%d",num_of_nodes);
+   // shortestPath(graph,num_of_nodes,0,10);
     fclose(file);
     return 0;
 }
