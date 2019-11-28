@@ -2,29 +2,33 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-struct tNode *node;
-struct tGraph *graph;
+unsigned int countNodes(FILE *file) {
+    unsigned int num_of_nodes = 0;
+    int c;
+    while ((c = fgetc(file)) != EOF) {
+        if (c == '\n')
+            num_of_nodes++;
+    }
+    return num_of_nodes;
+}
+
+void fileRead(FILE *file, tNode *graph, unsigned int num_of_nodes) {
+    for (unsigned int i = 0; i < num_of_nodes; i++) {
+        //TODO: Read graph, malloc connections
+
+    }
+};
 
 /*VYTVOŘENÍ JEDNODUCHÉHO GRAFU*/
+
 int main() {
-    graph = (tGraph *) malloc(sizeof(struct tGraph));
-    if (!graph)
-        return 0;
-    graphInit(graph);
-    /*Vytvoření uzlů*/
-    nodeInsert(graph, "A", 0);
-    nodeInsert(graph, "B", 1);
-    nodeInsert(graph, "C", 2);
-
-    /* Vytvoření spojení*/
-    makeConnection(graph, 0, "B", 1, 1);
-    makeConnection(graph, 0, "C", 2, 3);
-    makeConnection(graph, 1, "A", 0, 1);
-    makeConnection(graph, 2, "A", 0, 3);
-    graphPrint(graph);
-
-    printf("\nNejkratší cesta z uzlu A do zbývajících: \n");
-    shortestPath(graph, 0, 2);
-    graphClear(graph);
-    free(graph);
+    tNode *graph;
+    unsigned int num_of_nodes;
+    FILE *file = fopen("../graph.txt", "r");
+    if(!file)
+        return -1;
+    num_of_nodes = countNodes(file);
+    printf("%d",num_of_nodes);
+    fclose(file);
+    return 0;
 }

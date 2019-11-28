@@ -1,14 +1,16 @@
 
-/* Graf je implementován vázaným seznamem.
- * Typ tGraph představuje pole, na jehož jednotlivé indexy jsou ukládány uzly tNode.
- * Typ tNode reprezentuje samotný uzel, obsahuje jeho jméno, váhu spojení (vůči předchozímu uzlu), pozici v rámci grafu,
- * díky které je umožněn přístup k uzlu.
+ /*  Graf je implementován pomocí dynamického pole, na jehož jednotlivé indexy jsou ukládány uzly tNode.
+ * Typ tNode reprezentuje samotný uzel, obsahuje vzdálenost vůči startovnímu uzlu při hledání nejkratší cesty,
+ * dále obsahuje počet spojení, spojení jsou ukládána do dynamického pole, promměná done vyjadřuje zda uzel byl při
+ * hledání nejkratší cesty již zpracován.
+ * Typ tConnection vyjadřuje samotné spojení, je zde uložena váha spojení a ukazatel na příslušný uzel, mezi kterým
+ * je spojení realizováno.
  *
  *
  * VÁHA:
  *
- * Kladná čísla - cesta je orientována směrem od uzlu
- * Záporná čísla - cesta je orientována směrem do uzlu
+ * Kladná čísla - cesta je orientována směrem od uzlu, opačnou orientaci nevyjadřujeme, neboť je v rámci hledání
+ * nejkratší cesty zbytečná.
  * Speciální případ - Pokud jsou všechny cesty ohodnoceny nulou, pak se jedná o nevážený a neorientovaný graf.
  *
  *
@@ -18,33 +20,22 @@
 #ifndef _GRAPH_H_
 #define _GRAPH_H_
 
-#define NUM_OF_NODES 3  /*Počet uzlů určený čtením ze souboru. */
+#include <stdbool.h>
 
-typedef char *tName;
 typedef int tWeight;
 
 typedef struct tNode {
-    tName name;
-    tWeight weight;
-    unsigned int position;
-    struct tNode* next;
+    unsigned int distance;
+    unsigned int num_of_connections;
+    struct tConnection **connections;
+    bool done;
 } tNode;
 
-typedef struct tGraph{
-    struct tNode* nodes[NUM_OF_NODES];
-}tGraph;
+typedef struct tConnection {
+    tWeight weight;
+    struct tNode *node;
+} tConnection;
 
-void graphInit(tGraph *graph);
 
-void nodeInsert(tGraph *graph, tName name, unsigned int position);
-
-void makeConnection(tGraph *graph, unsigned int position, tName neighbour_name, unsigned int neighbour_position, tWeight weight);
-
-void graphPrint(tGraph *graph);
-
-void graphClear(tGraph *graph);
-
-void shortestPath(tGraph *graph, unsigned int start_position, unsigned int end_position);
-
-tNode* findNode(tGraph *graph, tName key);
+void graphPrint(tNode* graph, unsigned int num_of_nodes);
 #endif
