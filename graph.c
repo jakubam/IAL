@@ -3,13 +3,35 @@
 #include <stdlib.h>
 #include <limits.h>
 
+
+void nodeInit(tNode *node) {
+    node->num_of_connections = 0;
+    node->done = 0;
+    node->connections = (tConnection*)malloc(sizeof(tConnection));
+}
+
+void addConnection(tNode *node, tNode *ptr, unsigned int weight) {
+    node->connections = (tConnection*)realloc(node->connections, ++node->num_of_connections*sizeof(tConnection));
+    node->connections[node->num_of_connections-1].node = ptr;
+    node->connections[node->num_of_connections-1].weight = weight;
+}
+
+void graphRemove(tNode *graph, unsigned int num_of_nodes) {
+    for (unsigned int i = 0; i < num_of_nodes; i++) {
+        free(graph[i].connections);
+    }
+    free(graph);
+}
+
 void graphPrint(tNode *graph, unsigned int num_of_nodes) {
     for (unsigned int i = 0; i < num_of_nodes; i++) {
-        printf("Uzel: %d ", i);
+        printf("Uzel: %d ", i + 1);
         printf("Spojení| ");
         for (unsigned int j = 0; j < graph[i].num_of_connections; j++) {
-             printf("index: %ld distance: %d  váha: %d | ",(graph[i].connections[j]->node) - graph,graph[i].distance, graph[i].connections[j]->weight);
+             printf("index: %ld distance: %d  váha: %d | ",
+             (graph[i].connections[j].node) - graph + 1, graph[i].distance, graph[i].connections[j].weight);
         }
+        putchar('\n');
     }
 }
 
@@ -48,11 +70,11 @@ void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, u
 
         unsigned int distance = 0;
         for(unsigned int i = 0; i < closest.num_of_connections; i++){
-                if(!closest.connections[i]->node->done){
-                    distance = closest.distance + closest.connections[i]->weight;
-                    if(distance < closest.connections[i]->node->distance){
-                        closest.connections[i]->node->distance = distance;
-                        closest.connections[i]->node->previous = &closest;
+                if(!closest.connections[i].node->done){
+                    distance = closest.distance + closest.connections[i].weight;
+                    if(distance < closest.connections[i].node->distance){
+                        closest.connections[i].node->distance = distance;
+                        closest.connections[i].node->previous = &closest;
                     }
                 }
         }

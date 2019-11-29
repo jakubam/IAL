@@ -22,25 +22,25 @@
 
 #include <stdbool.h>
 
-typedef int tWeight;
-
 typedef struct tNode {
     unsigned int distance;
     unsigned int num_of_connections;
-    struct tConnection **connections;
+    struct tConnection *connections;
     struct tNode* previous;
     bool done;
 } tNode;
 
 typedef struct tConnection {
-    tWeight weight;
+    unsigned int weight;
     struct tNode *node;
 } tConnection;
 
-
+void nodeInit(tNode *node);
+void addConnection(tNode *node, tNode *ptr, unsigned int weight);
 void graphPrint(tNode* graph, unsigned int num_of_nodes);
+void graphRemove(tNode *graph, unsigned int num_of_nodes);
 
- void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end);
- tNode findClosest(tNode *graph, unsigned int num_of_nodes);
- bool pathIsFinished(tNode *graph, unsigned int num_of_nodes);
+void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end);
+tNode findClosest(tNode *graph, unsigned int num_of_nodes);
+bool pathIsFinished(tNode *graph, unsigned int num_of_nodes);
 #endif
