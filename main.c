@@ -12,11 +12,29 @@ int main() {
         return -1;
     num_of_nodes = countNodes(file);
     tNode *graph = (tNode*)malloc(num_of_nodes*sizeof(tNode));
-    printf("Number of nodes: %d\n",num_of_nodes);
+    printf("Počet uzlů: %d\n\n",num_of_nodes);
+    printf("Po přečtení souboru: \n");
+    printf("----------------------------------------------------\n");
     fileRead(file, graph, num_of_nodes);
     graphPrint(graph, num_of_nodes);
-    //shortestPath(graph,num_of_nodes,1,3);
+    printf("----------------------------------------------------\n\n");
+    unsigned int *path = NULL;
+    unsigned int path_length = 0;
+    unsigned int start = 1;
+    unsigned int end = 3;
+    printf("Po vyhledání nejkratší cesty: \n");
+    printf("----------------------------------------------------\n");
+    shortestPath(graph,num_of_nodes,start,end, &path, &path_length);
+    graphPrint(graph, num_of_nodes);
+    printf("----------------------------------------------------\n\n");
+    printf("Path from node | %d | to node | %d | : \n", start, end);
+    for (int i = 0; i < path_length; ++i) {
+        printf("| %d | ", path[i]);
+    }
+
+
     fclose(file);
     graphRemove(graph, num_of_nodes);
+    free(path);
     return 0;
 }
