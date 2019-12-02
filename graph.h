@@ -40,7 +40,7 @@ void addConnection(tNode *node, tNode *ptr, unsigned int weight);
 void graphPrint(tNode* graph, unsigned int num_of_nodes);
 void graphRemove(tNode *graph, unsigned int num_of_nodes);
 
-void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end);
-tNode findClosest(tNode *graph, unsigned int num_of_nodes);
+void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end,unsigned int **path, unsigned int *path_length);
+tNode *findClosest(tNode *graph, unsigned int num_of_nodes);
 bool pathIsFinished(tNode *graph, unsigned int num_of_nodes);
 #endif
