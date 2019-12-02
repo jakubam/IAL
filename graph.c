@@ -28,10 +28,20 @@ void graphPrint(tNode *graph, unsigned int num_of_nodes) {
         printf("Uzel: %d ", i + 1);
         printf("Spojení: | ");
         for (unsigned int j = 0; j < graph[i].num_of_connections; j++) {
-            printf("index: %2ld distance: %d  váha: %2d | ",
-                   (graph[i].connections[j].node) - graph + 1, graph[i].distance, graph[i].connections[j].weight);
+            printf("index: %2ld váha: %2d vzdálenost: %d | ",
+                   (graph[i].connections[j].node) - graph + 1, graph[i].connections[j].weight, graph[i].distance);
         }
         putchar('\n');
+    }
+}
+
+void distancePrint(tNode *graph, unsigned int num_of_nodes) {
+    for (unsigned int i = 0; i < num_of_nodes; i++) {
+        printf("Uzel: %d ", i + 1);
+        if (graph[i].distance == INT_MAX)
+            printf("Vzdálenost:   ∞\n");
+        else
+            printf("Vzdálenost: %3d\n", graph[i].distance);
     }
 }
 
@@ -47,7 +57,7 @@ tNode *findClosest(tNode *graph, unsigned int num_of_nodes) {
     unsigned int min_distance = INT_MAX;
     unsigned int position_of_min = 0;
     for (unsigned int i = 0; i < num_of_nodes; i++) {
-        if ((!graph[i].done) && (graph[i].distance < min_distance)) {
+        if ((!graph[i].done) && (graph[i].distance < min_distance) && (graph[i].distance) != INT_MAX) {
             min_distance = graph[i].distance;
             position_of_min = i;
         }
@@ -55,7 +65,12 @@ tNode *findClosest(tNode *graph, unsigned int num_of_nodes) {
     return &graph[position_of_min];
 }
 
-void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end, unsigned int **path, unsigned int *path_length) {
+void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end, unsigned int **path,
+                  unsigned int *path_length) {
+    if((start < 0 || start > num_of_nodes) || (end < 0 || end > num_of_nodes))
+        return;
+    if(start == end)
+        return;
     start--;
     end--;
     *path_length = 0;
@@ -76,7 +91,6 @@ void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, u
         closest->done = true;
 
         if (closest == &graph[end]) {
-
             if (closest->previous != NULL || closest == &graph[start]) {
                 tNode *temp = closest;
                 while (temp) {
@@ -85,12 +99,13 @@ void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, u
                     temp = temp->previous;
                 }
                 unsigned int t;
-                for (unsigned i = 0; i < *path_length/2; i++) {
-                    t =(*path)[i];
-                    (*path)[i] = (*path)[*path_length - 1];
-                    (*path)[*path_length - 1] = t;
+                for (unsigned i = 0; i < *path_length / 2; i++) {
+                    t = (*path)[i];
+                    (*path)[i] = (*path)[*path_length - 1 - i];
+                    (*path)[*path_length - 1 - i] = t;
                 }
             }
+            return;
         }
         unsigned int distance = 0;
         for (unsigned int i = 0; i < closest->num_of_connections; i++) {
