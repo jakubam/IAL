@@ -28,8 +28,8 @@ void graphPrint(tNode *graph, unsigned int num_of_nodes) {
         printf("Uzel: %d ", i + 1);
         printf("Spojení: | ");
         for (unsigned int j = 0; j < graph[i].num_of_connections; j++) {
-            printf("index: %2ld váha: %2d vzdálenost: %d | ",
-                   (graph[i].connections[j].node) - graph + 1, graph[i].connections[j].weight, graph[i].distance);
+            printf("index: %2ld váha: %2d | ",
+                   (graph[i].connections[j].node) - graph + 1, graph[i].connections[j].weight);
         }
         putchar('\n');
     }
@@ -55,13 +55,15 @@ bool pathIsFinished(tNode *graph, unsigned int num_of_nodes) {
 
 tNode *findClosest(tNode *graph, unsigned int num_of_nodes) {
     unsigned int min_distance = INT_MAX;
-    unsigned int position_of_min = 0;
+    int  position_of_min = 0;
     for (unsigned int i = 0; i < num_of_nodes; i++) {
-        if ((!graph[i].done) && (graph[i].distance < min_distance) && (graph[i].distance) != INT_MAX) {
+        if ((!graph[i].done) && (graph[i].distance < min_distance)) {
             min_distance = graph[i].distance;
             position_of_min = i;
         }
     }
+    if(min_distance == INT_MAX)
+        return NULL;
     return &graph[position_of_min];
 }
 
@@ -88,10 +90,11 @@ void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, u
     tNode *closest;
     while (!pathIsFinished(graph, num_of_nodes)) {
         closest = findClosest(graph, num_of_nodes);
+        if(!closest)
+            return;
         closest->done = true;
 
         if (closest == &graph[end]) {
-            if (closest->previous != NULL || closest == &graph[start]) {
                 tNode *temp = closest;
                 while (temp) {
                     *path = realloc(*path, sizeof(unsigned int));
@@ -104,8 +107,6 @@ void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, u
                     (*path)[i] = (*path)[*path_length - 1 - i];
                     (*path)[*path_length - 1 - i] = t;
                 }
-            }
-            return;
         }
         unsigned int distance = 0;
         for (unsigned int i = 0; i < closest->num_of_connections; i++) {
