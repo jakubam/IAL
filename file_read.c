@@ -29,7 +29,8 @@ void fileRead(FILE *file, tNode *graph, unsigned int num_of_nodes) {
         
         nodeInit(&graph[node_num-1]);
 
-        while ((c = fgetc(file)) != '\n') {
+        do  {
+            c = fgetc(file);
             if (!isspace(c)) {
                 buf[buf_len++] = c;
             }
@@ -42,8 +43,8 @@ void fileRead(FILE *file, tNode *graph, unsigned int num_of_nodes) {
                 }
                 else {
                     FILE_ERR();
-                }    
+                }
             }
-        }
+        }while(c!='\n');
     }
 }
