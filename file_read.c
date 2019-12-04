@@ -46,7 +46,5 @@ void fileRead(FILE *file, tNode *graph, unsigned int num_of_nodes) {
                 }
             }
         }while(c!='\n');
-
-
     }
 }
