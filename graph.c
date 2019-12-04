@@ -89,6 +89,8 @@ void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, u
     }
     tNode *closest;
     while (!pathIsFinished(graph, num_of_nodes)) {
+        if(n++<num_of_nodes*num_of_nodes/2)
+            return;
         closest = findClosest(graph, num_of_nodes);
         if(!closest)
             return;
