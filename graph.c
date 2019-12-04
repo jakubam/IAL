@@ -8,6 +8,7 @@ void nodeInit(tNode *node) {
     node->num_of_connections = 0;
     node->done = 0;
     node->connections = (tConnection *) malloc(sizeof(tConnection));
+    node->previous=NULL;
 }
 
 void addConnection(tNode *node, tNode *ptr, unsigned int weight) {
@@ -79,17 +80,19 @@ void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, u
     for (unsigned i = 0; i < num_of_nodes; i++) {
         graph[i].distance = INT_MAX;
         graph[i].done = false;
+        graph[start].previous=NULL;
     }
     graph[start].distance = 0;
     graph[start].done = true;
-
+    graph[start].previous=NULL;
     for (unsigned int i = 0; i < graph[start].num_of_connections; i++) {
         graph[start].connections[i].node->distance = graph[start].connections[i].weight;
         graph[start].connections[i].node->previous = &graph[start];
     }
     tNode *closest;
+    int n=0;
     while (!pathIsFinished(graph, num_of_nodes)) {
-        if(n++<num_of_nodes*num_of_nodes/2)
+        if(n++ > num_of_nodes*num_of_nodes/2)
             return;
         closest = findClosest(graph, num_of_nodes);
         if(!closest)
@@ -97,18 +100,22 @@ void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, u
         closest->done = true;
 
         if (closest == &graph[end]) {
+
                 tNode *temp = closest;
+                n=1;
                 while (temp) {
-                    *path = realloc(*path, sizeof(unsigned int));
+                    (*path) = realloc(*path, n++*sizeof(unsigned int));
                     (*path)[(*path_length)++] = temp - graph + 1;
                     temp = temp->previous;
+
                 }
                 unsigned int t;
-                for (unsigned i = 0; i < *path_length / 2; i++) {
+               for (unsigned i = 0; i < *path_length / 2; i++) {
                     t = (*path)[i];
                     (*path)[i] = (*path)[*path_length - 1 - i];
                     (*path)[*path_length - 1 - i] = t;
                 }
+
         }
         unsigned int distance = 0;
         for (unsigned int i = 0; i < closest->num_of_connections; i++) {
@@ -120,7 +127,6 @@ void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, u
                 }
             }
         }
+        closest->done = true;
     }
 }
-
-
