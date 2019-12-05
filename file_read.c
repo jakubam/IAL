@@ -21,12 +21,12 @@ void fileRead(FILE *file, tNode *graph, unsigned int num_of_nodes) {
         unsigned int node_num, buf_len = 0;
         int c;
         char buf[BUF_MAX];
-        
+
         fscanf(file, "%u", &node_num);
         if (node_num != i+1) {
             FILE_ERR();
         }
-        
+
         nodeInit(&graph[node_num-1]);
 
         do  {
