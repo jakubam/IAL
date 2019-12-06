@@ -42,6 +42,8 @@ void distancePrint(tNode *graph, unsigned int num_of_nodes);
 void graphRemove(tNode *graph, unsigned int num_of_nodes);
 
 void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end,unsigned int **path, unsigned int *path_length);
+ void findAllShortestPaths(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end, unsigned int **path,
+                           unsigned int *path_length, unsigned int *num_of_paths);
 tNode *findClosest(tNode *graph, unsigned int num_of_connections);
 bool pathIsFinished(tNode *graph, unsigned int num_of_nodes);
 #endif
