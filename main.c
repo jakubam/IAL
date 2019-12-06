@@ -34,6 +34,9 @@ int testGraph(char *file_name, unsigned int start, unsigned int end) {
             printf("| %d | ", path[i]);
         }
     }
+    unsigned int num_of_paths = 0;
+    findAllShortestPaths(graph, num_of_nodes, start, end, &path, &path_length,&num_of_paths);
+    printf("\n\nPočet nejkratších cest: %d", num_of_paths);
     printf("\n==================================================================\n");
     fclose(file);
     graphRemove(graph, num_of_nodes);
@@ -43,8 +46,5 @@ int testGraph(char *file_name, unsigned int start, unsigned int end) {
 
 
 int main() {
-    testGraph("../graph4.txt", 1, 4);
-
-    //TODO: Je graf správně uvolněn? Pokud druhý test obsahuje více uzlů nastane chyba.
-    testGraph("../graph3.txt", 1, 4);
+    testGraph("../graph.txt", 1, 4);
 }

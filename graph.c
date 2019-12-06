@@ -8,7 +8,7 @@ void nodeInit(tNode *node) {
     node->num_of_connections = 0;
     node->done = 0;
     node->connections = (tConnection *) malloc(sizeof(tConnection));
-    node->previous=NULL;
+    node->previous = NULL;
 }
 
 void addConnection(tNode *node, tNode *ptr, unsigned int weight) {
@@ -56,7 +56,7 @@ bool pathIsFinished(tNode *graph, unsigned int num_of_nodes) {
 
 tNode *findClosest(tNode *graph, unsigned int num_of_nodes) {
     unsigned int min_distance = INT_MAX;
-    int  position_of_min = 0;
+    int position_of_min = 0;
     for (unsigned int i = 0; i < num_of_nodes; i++) {
         if ((!graph[i].done) && (graph[i].distance < min_distance)) {
             min_distance = graph[i].distance;
@@ -64,7 +64,7 @@ tNode *findClosest(tNode *graph, unsigned int num_of_nodes) {
         }
     }
     /*Ošetření pro případ, kdy graf obsahuje uzly, ke kterým ze startovacího uzlu nevede žádná cesta*/
-    if(min_distance == INT_MAX)
+    if (min_distance == INT_MAX)
         return NULL;
     return &graph[position_of_min];
 }
@@ -72,22 +72,22 @@ tNode *findClosest(tNode *graph, unsigned int num_of_nodes) {
 void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end, unsigned int **path,
                   unsigned int *path_length) {
     /* Ošetření neplatných vstupů*/
-    if((start < 1 || start > num_of_nodes) || (end < 1 || end > num_of_nodes))
+    if ((start < 1 || start > num_of_nodes) || (end < 1 || end > num_of_nodes))
         return;
-    if(start == end)
+    if (start == end)
         return;
-    /*Dekrementace čísel uzlů, tak aby reprezentovaly indexy*/
+    /*Dekrementace čísel uzlů, aby reprezentovaly indexy*/
     start--;
     end--;
     /*Inicializace*/
     for (unsigned i = 0; i < num_of_nodes; i++) {
         graph[i].distance = INT_MAX;
         graph[i].done = false;
-        graph[start].previous=NULL;
+        graph[start].previous = NULL;
     }
     graph[start].distance = 0;
     graph[start].done = true;
-    graph[start].previous=NULL;
+    graph[start].previous = NULL;
     *path_length = 0;
     /*U startovního uzlu se podíváme na sousedící uzly a přiřadíme jim odpovídající vzdálenost */
     for (unsigned int i = 0; i < graph[start].num_of_connections; i++) {
@@ -98,25 +98,25 @@ void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, u
     while (!pathIsFinished(graph, num_of_nodes)) {
         /* Vyber uzel s nejkratší vzdáleností*/
         closest = findClosest(graph, num_of_nodes);
-        if(!closest)
+        if (!closest)
             return;
         closest->done = true;
         /*Byl nalezen cílový uzel*/
         if (closest == &graph[end]) {
-                /*Vytvoření cesty*/
-                tNode *temp = closest;
-                while (temp) {
-                    (*path) = realloc(*path, (*path_length+1)*sizeof(unsigned int));
-                    (*path)[(*path_length)++] = temp - graph + 1;
-                    temp = temp->previous;
-                }
-                /* Cesta je uložena od konečného uzlu k uzlu startovacímu, proto ji je nutné převrátit*/
-                unsigned int t;
-                for (unsigned i = 0; i < *path_length / 2; i++) {
-                    t = (*path)[i];
-                    (*path)[i] = (*path)[*path_length - 1 - i];
-                    (*path)[*path_length - 1 - i] = t;
-                }
+            /*Vytvoření cesty*/
+            tNode *temp = closest;
+            while (temp) {
+                (*path) = realloc(*path, (*path_length + 1) * sizeof(unsigned int));
+                (*path)[(*path_length)++] = temp - graph + 1;
+                temp = temp->previous;
+            }
+            /* Cesta je uložena od konečného uzlu k uzlu startovacímu, proto ji je nutné převrátit*/
+            unsigned int t;
+            for (unsigned i = 0; i < *path_length / 2; i++) {
+                t = (*path)[i];
+                (*path)[i] = (*path)[*path_length - 1 - i];
+                (*path)[*path_length - 1 - i] = t;
+            }
         }
         /*Aktualizace vzdáleností*/
         unsigned int distance = 0;
@@ -130,5 +130,25 @@ void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, u
             }
         }
         //closest->done = true;
+    }
+}
+
+void findAllShortestPaths(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end, unsigned int **path,
+                     unsigned int *path_length, unsigned int *num_of_paths) {
+    tNode *closest = graph[end-1].previous;
+    for(unsigned int i= 0; i < num_of_nodes; i++){
+        graph[i].done = false;
+    }
+    while (closest != &graph[start-1]) {
+        for (unsigned int j = 0; j < num_of_nodes; j++) {
+            /* Existuje další nejkratší cesta*/
+            if ((closest->distance == graph[j].distance) && !graph[j].done) {
+                //TODO: Vytvořit novou cestu pomocí rekurze? Změna start a end node, zkopírovat dosavadní cestu
+                //findAllShortestPaths(graph, num_of_nodes, ........)
+                (*num_of_paths)++;
+                graph[j].done = true;
+            }
+        }
+        closest = closest->previous;
     }
 }
