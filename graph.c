@@ -132,23 +132,53 @@ void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, u
         //closest->done = true;
     }
 }
-
+/*
 void findAllShortestPaths(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end, unsigned int **path,
                      unsigned int *path_length, unsigned int *num_of_paths) {
-    tNode *closest = graph[end-1].previous;
-    for(unsigned int i= 0; i < num_of_nodes; i++){
+    tNode *closest = graph[end - 1].previous;
+    for (unsigned int i = 0; i < num_of_nodes; i++) {
         graph[i].done = false;
     }
-    while (closest != &graph[start-1]) {
+    while (closest != &graph[start - 1]) {
         for (unsigned int j = 0; j < num_of_nodes; j++) {
-            /* Existuje další nejkratší cesta*/
+            *//* Existuje další nejkratší cesta*//*
             if ((closest->distance == graph[j].distance) && !graph[j].done) {
-                //TODO: Vytvořit novou cestu pomocí rekurze? Změna start a end node, zkopírovat dosavadní cestu
                 //findAllShortestPaths(graph, num_of_nodes, ........)
                 (*num_of_paths)++;
                 graph[j].done = true;
             }
         }
         closest = closest->previous;
+    }
+}*/
+
+            /* paths reprezentuje dynamické pole, do kterého budou uloženy všechny nejkratší cesty pomocí jednotlivých uzlů*/
+void pathsFinder(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end, unsigned int *length, unsigned int **paths) {
+    /*Dekrementace čísel uzlů, aby reprezentovaly indexy*/
+    start--;
+    end--;
+    /* Ukončení rekurze - přišli jsme až do počátečního uzlu*/
+    if (end == start) {
+        /* Uložení počátečního uzlu do pole paths*/
+        (*paths) = realloc(*paths, ++(*length) * sizeof(unsigned int));
+        (*paths)[*length-1] = &graph[start] - graph + 1;
+        return;
+    }
+    unsigned int distance = INT_MAX;
+    for (unsigned int i = 0; i < num_of_nodes; i++) {
+        /*Najdi všechny uzly, které jsou od startu méně vzdálené než konečný uzel*/
+        if ((graph[i].distance < graph[end].distance))
+            for (unsigned int j = 0; j < graph[i].num_of_connections; j++) {
+                /* Najdi všechny sousedy, které vedou do koncového uzlu*/
+                if (graph[i].connections[j].node == &graph[end]) {
+                    /*Pokud uzel leží na nejkratší cestě, je uložen do pole paths*/
+                    if (graph[end].distance == graph[i].distance + graph[i].connections[j].weight) {
+                        (*paths) = realloc(*paths, ++(*length) * sizeof(unsigned int));
+                        (*paths)[*length-1] = &graph[end] - graph + 1;
+                        pathsFinder(graph, num_of_nodes, ++start, &graph[i] - graph + 1, length,paths);
+                        start--;
+                    }
+                }
+            }
     }
 }

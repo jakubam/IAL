@@ -34,12 +34,21 @@ int testGraph(char *file_name, unsigned int start, unsigned int end) {
             printf("| %d | ", path[i]);
         }
     }
-    unsigned int num_of_paths = 0;
-    findAllShortestPaths(graph, num_of_nodes, start, end, &path, &path_length,&num_of_paths);
-    printf("\n\nPočet nejkratších cest: %d", num_of_paths);
-    printf("\n==================================================================\n");
+    unsigned int length = 0;
+    printf("\n\nVšechny nejkratší cesty: \n---------------------------------------------------\n");
+    unsigned int *paths = NULL;
+    pathsFinder(graph, num_of_nodes, start, end, &length, &paths);
+    /* Pro výpis je nutno procházet pole paths od konce, jelikož cesty ukládá invertovaně (od konečného uzlu po startovací)*/
+    for (unsigned int j = 0; j < length; ++j) {
+        printf("| %d | ", paths[length - j - 1]);
+        /*Pokud je nalezen konečný uzel, jedná se o konec jedné cesty*/
+        if (paths[length - j - 1] == end)
+            printf("\n---------------------------------------------------\n");
+    }
+    printf("==================================================================\n");
     fclose(file);
     graphRemove(graph, num_of_nodes);
+    free(paths);
     free(path);
     return 0;
 }
