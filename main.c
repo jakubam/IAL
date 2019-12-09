@@ -38,14 +38,22 @@ int testGraph(char *file_name, unsigned int start, unsigned int end) {
     printf("\n\nVšechny nejkratší cesty: \n---------------------------------------------------\n");
     unsigned int *paths = NULL;
     pathsFinder(graph, num_of_nodes, start, end, &length, &paths);
+    /*Proměnná spaces je zavedena jen za účelem formátování výstupu konzolového okna*/
+    int spaces = 5;
     /* Pro výpis je nutno procházet pole paths od konce, jelikož cesty ukládá invertovaně (od konečného uzlu po startovací)*/
     for (unsigned int j = 0; j < length; ++j) {
-        printf("| %d | ", paths[length - j - 1]);
-        /*Pokud je nalezen konečný uzel, jedná se o konec jedné cesty*/
-        if (paths[length - j - 1] == end)
-            printf("\n---------------------------------------------------\n");
+        /*Pokud je nalezen začáteční uzel, jedná se o konec jedné cesty*/
+        if (paths[length - j - 1] == start && j !=0) {
+            /*Tisk spojnice*/
+            printf("\n%*s%s\n",spaces-7,"","|");
+            printf("%*s%s\n",spaces-7,"","|");
+            printf("%*s%s\n",spaces-7,"","↓");
+            spaces = 5;
+        }
+        printf("| %2d | ", paths[length - j - 1]);
+        spaces+=7;
     }
-    printf("==================================================================\n");
+    printf("\n==================================================================\n");
     fclose(file);
     graphRemove(graph, num_of_nodes);
     free(paths);
@@ -55,5 +63,5 @@ int testGraph(char *file_name, unsigned int start, unsigned int end) {
 
 
 int main() {
-    testGraph("../graph.txt", 1, 4);
+    testGraph("../graph6.txt", 1, 17);
 }
