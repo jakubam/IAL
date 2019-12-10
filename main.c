@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-/*VYTVOŘENÍ JEDNODUCHÉHO GRAFU*/
-
 int testGraph(char *file_name, unsigned int start, unsigned int end) {
     unsigned int num_of_nodes;
     FILE *file = fopen(file_name, "r");
@@ -31,27 +29,20 @@ int testGraph(char *file_name, unsigned int start, unsigned int end) {
         printf("Cesta neexistuje!");
     } else {
         for (unsigned int i = 0; i < path_length; ++i) {
-            printf("| %d | ", path[i]);
+            printf("| %2d | ", path[i]);
         }
     }
     unsigned int length = 0;
     printf("\n\nVšechny nejkratší cesty: \n---------------------------------------------------\n");
     unsigned int *paths = NULL;
     pathsFinder(graph, num_of_nodes, start, end, &length, &paths);
-    /*Proměnná spaces je zavedena jen za účelem formátování výstupu konzolového okna*/
-    int spaces = 5;
-    /* Pro výpis je nutno procházet pole paths od konce, jelikož cesty ukládá invertovaně (od konečného uzlu po startovací)*/
+    /*Pro výpis je nutno procházet pole paths od konce, jelikož cesty ukládá invertovaně(od konečného uzlu po startovací)*/
     for (unsigned int j = 0; j < length; ++j) {
         /*Pokud je nalezen začáteční uzel, jedná se o konec jedné cesty*/
         if (paths[length - j - 1] == start && j !=0) {
-            /*Tisk spojnice*/
-            printf("\n%*s%s\n",spaces-7,"","|");
-            printf("%*s%s\n",spaces-7,"","|");
-            printf("%*s%s\n",spaces-7,"","↓");
-            spaces = 5;
+            printf("<-- Na tomto uzlu se cesta sbíhá s cestou následující\n\n");
         }
         printf("| %2d | ", paths[length - j - 1]);
-        spaces+=7;
     }
     printf("\n==================================================================\n");
     fclose(file);
@@ -63,5 +54,19 @@ int testGraph(char *file_name, unsigned int start, unsigned int end) {
 
 
 int main() {
-    testGraph("../graph6.txt", 1, 17);
+    printf("JEDNODUCHÝ NEORIENTOVANÝ NEOHODNOCENÝ GRAF\n");
+    testGraph("graph_simple.txt", 1, 5);
+    printf("\n\nJEDNODUCHÝ NEORIENTOVANÝ NEOHODNOCENÝ GRAF -- NEEXISTUJÍCÍ SPOJENÍ\n");
+    testGraph("graph_no_connection.txt", 1, 4);
+    printf("\n\nJEDNODUCHÝ NEORIENTOVANÝ NEOHODNOCENÝ GRAF -- EXISTUJÍ DVĚ NEJKRATŠÍ CESTY\n");
+    testGraph("graph_two_paths.txt", 1, 8);
+    printf("\n\nNEORIENTOVANÝ NEOHODNOCENÝ GRAF\n");
+    testGraph("graph_unoriented_weightless.txt", 1, 17);
+    printf("\n\nNEORIENTOVANÝ OHODNOCENÝ GRAF\n");
+    testGraph("graph_unoriented_weighted.txt", 1, 17);
+    printf("\n\nORIENTOVANÝ NEOHODNOCENÝ GRAF\n");
+    testGraph("graph_oriented_weightless.txt", 1, 17);
+    printf("\n\nORIENTOVANÝ OHODNOCENÝ GRAF\n");
+    testGraph("graph_oriented_weighted.txt", 1, 17);
+
 }
