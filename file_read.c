@@ -4,10 +4,11 @@
 #include <stdio.h>
 #include <ctype.h>
 
+/*Funkcia počítajúca uzly (riadky) v súbore*/
 unsigned int countNodes(FILE *file) {
     unsigned int num_of_nodes = 0;
     int c;
-    rewind(file);
+    rewind(file); //Návrat na začiatok súboru
     while ((c = fgetc(file)) != EOF) {
         if (c == '\n')
             num_of_nodes++;
@@ -15,13 +16,17 @@ unsigned int countNodes(FILE *file) {
     return num_of_nodes;
 }
 
+/*Načítanie grafu zo súboru
+**Graf je v súbore uložený ako zoznam susedov.*/
 void fileRead(FILE *file, tNode *graph, unsigned int num_of_nodes) {
-    rewind(file);
+    rewind(file); //Návrat na začiatok súboru
+    /*Čítanie známeho počtu riadkov*/
     for (unsigned int i = 0; i < num_of_nodes; i++) {
         unsigned int node_num, buf_len = 0;
         int c;
-        char buf[BUF_MAX];
+        char buf[BUF_MAX]; //Buffer pre uloženie susedného uzlu a váhy hrany
 
+        /*Načítanie uzlu*/
         fscanf(file, "%u", &node_num);
         if (node_num != i+1) {
             FILE_ERR();
@@ -29,11 +34,15 @@ void fileRead(FILE *file, tNode *graph, unsigned int num_of_nodes) {
 
         nodeInit(&graph[node_num-1]);
 
+        /*Načítanie susedných uzlov a váh hrán
+        **Hrany sú vo formáte sused-váha, oddelené medzerami.*/
         do  {
             c = fgetc(file);
+            /*Uloženie znaku do bufferu*/
             if (!isspace(c)) {
                 buf[buf_len++] = c;
             }
+            /*Spracovanie bufferu*/
             else if (buf_len) {
                 unsigned int con_num, weight;
                 buf[buf_len] = '\0';
@@ -45,6 +54,6 @@ void fileRead(FILE *file, tNode *graph, unsigned int num_of_nodes) {
                     FILE_ERR();
                 }
             }
-        }while(c!='\n');
+        } while (c != '\n');
     }
 }
