@@ -77,11 +77,6 @@ tNode *findClosest(tNode *graph, unsigned int num_of_nodes) {
 /* Funkce realizující nalezení nejkratší cesty*/
 void shortestPath(tNode *graph, unsigned int num_of_nodes, unsigned int start, unsigned int end, unsigned int **path,
                   unsigned int *path_length) {
-    /* Ošetření neplatných vstupů*/
-    if ((start < 1 || start > num_of_nodes) || (end < 1 || end > num_of_nodes))
-        return;
-    if (start == end)
-        return;
     /*Dekrementace čísel uzlů, aby reprezentovaly indexy*/
     start--;
     end--;
