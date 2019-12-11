@@ -2,13 +2,20 @@
 #include "file_read.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
-int testGraph(char *file_name, unsigned int start, unsigned int end) {
+int testGraph(FILE *file, unsigned int start, unsigned int end) {
     unsigned int num_of_nodes;
-    FILE *file = fopen(file_name, "r");
-    if (!file)
-        return -1;
     num_of_nodes = countNodes(file);
+	 /* Ošetření neplatných vstupů*/
+    if ((start < 1 || start > num_of_nodes) || (end < 1 || end > num_of_nodes)){
+        fclose(file);
+        return -1;
+	}
+    if (start == end){
+        fclose(file);
+        return -1;
+	}
     tNode *graph = (tNode *) malloc(num_of_nodes * sizeof(tNode));
     printf("==================================================================\n");
     printf("Počet uzlů: %d\n\n", num_of_nodes);
@@ -44,7 +51,7 @@ int testGraph(char *file_name, unsigned int start, unsigned int end) {
         }
         printf("| %2d | ", paths[length - j - 1]);
     }
-    printf("\n==================================================================\n");
+    printf("\n==================================================================\n\n");
     fclose(file);
     graphRemove(graph, num_of_nodes);
     free(paths);
@@ -53,20 +60,59 @@ int testGraph(char *file_name, unsigned int start, unsigned int end) {
 }
 
 
-int main() {
-    printf("JEDNODUCHÝ NEORIENTOVANÝ NEOHODNOCENÝ GRAF\n");
-    testGraph("graph_simple.txt", 1, 5);
-    printf("\n\nJEDNODUCHÝ NEORIENTOVANÝ NEOHODNOCENÝ GRAF -- NEEXISTUJÍCÍ SPOJENÍ\n");
-    testGraph("graph_no_connection.txt", 1, 4);
-    printf("\n\nJEDNODUCHÝ NEORIENTOVANÝ NEOHODNOCENÝ GRAF -- EXISTUJÍ DVĚ NEJKRATŠÍ CESTY\n");
-    testGraph("graph_two_paths.txt", 1, 8);
-    printf("\n\nNEORIENTOVANÝ NEOHODNOCENÝ GRAF\n");
-    testGraph("graph_unoriented_weightless.txt", 1, 17);
-    printf("\n\nNEORIENTOVANÝ OHODNOCENÝ GRAF\n");
-    testGraph("graph_unoriented_weighted.txt", 1, 17);
-    printf("\n\nORIENTOVANÝ NEOHODNOCENÝ GRAF\n");
-    testGraph("graph_oriented_weightless.txt", 1, 17);
-    printf("\n\nORIENTOVANÝ OHODNOCENÝ GRAF\n");
-    testGraph("graph_oriented_weighted.txt", 1, 17);
+int main(int argc, char *argv[]) {
 
+    /*Vypsání help*/
+    if(argc == 2){
+        if((strcmp(argv[1], "--help") == 0)){
+            printf("Návod:\n");
+			printf("----------------------------------------------\n");
+			printf("Prosím, zadejte vstup ve tvaru: C S E (N)\n");
+            printf("C: Cesta k grafu\n");
+            printf("S: Startovní uzel (celé číslo)\n");
+            printf("K: Konečný uzel (celé číslo)\n");
+            printf("N: Nadpis (volitelné)\n");
+			printf("-----------------------------------------------\n");
+            return 0;
+        }
+    }
+
+    /*Kontrola správného počtu argumentů*/
+    if(!(argc == 4 || argc == 5)){
+        fprintf(stderr,"Špatný počet argumentů\n");
+        return -1;
+    }
+
+    /*Kontrola startovního a koncového uzlu*/
+    char* next;
+    int start = strtol(argv[2], &next, 10);
+    if (*next != '\0') {
+        fprintf(stderr,"Neplatný startovní uzel!\n");
+        return -1;
+    }
+    int end = strtol(argv[3], &next, 10);
+    if (*next != '\0') {
+        fprintf(stderr,"Neplatný koncový uzel!\n");
+        return -1;
+    }
+
+    /*Načtení souboru*/
+    FILE * file;
+    file = fopen(argv[1], "r");
+    /*Je provedeno, pokud soubor existuje*/
+    if(file != NULL){
+		/*Vypíše nadpis, pokud je zadán*/
+        if(argc == 5){
+            printf("\n\n%s\n",argv[4]);
+		}
+        int check = testGraph(file, start, end);
+        if(check != 0){
+			fprintf(stderr, "Špatně definované čísla uzlů!\n");
+            return -1;
+        }
+    } else {
+        fprintf(stderr,"Neplatný soubor!\n");
+        return -1;
+    }
+    return 0;
 }
